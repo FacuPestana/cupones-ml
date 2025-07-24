@@ -2,7 +2,7 @@ name: Actualizar Cupones
 
 on:
   schedule:
-    - cron: '0 12 * * *'  # Corre a las 12:00 UTC = 9:00 AM Argentina
+    - cron: '33 17 * * *'  # Corre a las 17:31 UTC = 14:31 Argentina
   workflow_dispatch:
 
 jobs:

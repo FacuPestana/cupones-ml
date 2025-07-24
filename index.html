@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cupones Mercado Libre - Actualizados Diario</title>
+  <meta name="description" content="Cupones diarios de Mercado Libre. Termos, mates, Stanley y tecnología." />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <link rel="icon" href="https://http2.mlstatic.com/frontend-assets/ml-web-navigation/ui-navigation/5.21.1/mercadolibre/favicon.ico" />
+</head>
+<body class="bg-yellow-50 text-gray-800">
+  <div class="max-w-3xl mx-auto py-8 px-4">
+    <h1 class="text-3xl font-bold text-yellow-600 mb-4">🎯 Cupones del Día - Mercado Libre</h1>
+    <p class="mb-6">Ofertas seleccionadas de tecnología, termos, mates y productos Stanley. Actualizado automáticamente todos los días.</p>
+
+    <div id="cupones" class="space-y-4">
+      <!-- Los cupones serán inyectados automáticamente por el script -->
+    </div>
+
+    <p class="mt-10 text-sm text-gray-500">Actualizado: <span id="fecha"></span></p>
+  </div>
+
+  <script>
+    document.getElementById("fecha").textContent = new Date().toLocaleDateString("es-AR");
+
+    if ("Notification" in window) {
+      Notification.requestPermission().then(function (permiso) {
+        if (permiso === "granted") {
+          new Notification("🎁 Nuevos cupones disponibles en Mercado Libre", {
+            body: "Incluye termos Stanley, tecnología y más. Ingresá ahora!",
+            icon: "https://http2.mlstatic.com/frontend-assets/ml-web-navigation/ui-navigation/5.21.1/mercadolibre/favicon.ico"
+          });
+        }
+      });
+    }
+  </script>
+</body>
+</html>
