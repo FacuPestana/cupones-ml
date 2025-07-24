@@ -1,0 +1,60 @@
+name: Actualizar Cupones
+
+on:
+  schedule:
+    - cron: '0 12 * * *'  # Corre a las 12:00 UTC = 9:00 AM Argentina
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependencias
+        run: pip install requests beautifulsoup4
+
+      - name: Ejecutar generador de HTML
+        id: generar
+        run: python generar_cupones.py
+
+      - name: Confirmar y subir cambios
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add index.html
+          git commit -m "Actualizar cupones automáticos"
+          git push
+        continue-on-error: true
+
+      - name: Enviar email de notificación (éxito)
+        if: ${{ success() }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_EMAIL }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "✅ Workflow actualizado: Cupones Mercado Libre"
+          to: ${{ secrets.NOTIFY_EMAIL_TO }}
+          from: ${{ secrets.SMTP_EMAIL }}
+          body: "El workflow para actualizar cupones en Mercado Libre se ejecutó correctamente."
+
+      - name: Enviar email de notificación (error)
+        if: ${{ failure() }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_EMAIL }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "❌ Workflow falló: Cupones Mercado Libre"
+          to: ${{ secrets.NOTIFY_EMAIL_TO }}
+          from: ${{ secrets.SMTP_EMAIL }}
+          body: "El workflow para actualizar cupones en Mercado Libre falló. Revisá GitHub Actions para más detalles."
